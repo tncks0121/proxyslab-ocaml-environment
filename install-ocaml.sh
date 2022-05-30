@@ -9,5 +9,6 @@ opam switch create $OPAM_SWITCH $OCAML_VERSION
 eval $(opam env)
 opam install -y utop dune llvm.10.0.0 ounit merlin ocamlformat ocaml-lsp-server odoc z3 ocamlgraph
 opam pin add git+https://github.com/prosyslab-classroom/llvmutils.git
+opam pin add git+https://github.com/prosyslab/cil
 
-echo "$(opam env)" >> ~/.bashrc
+echo "$(opam env)" >>~/.bashrc
