@@ -1,4 +1,16 @@
-#!/usr/bin/env sh
+#!/bin/bash
+
+CODE_NAME=$(lsb_release -c | cut -f 2-)
+
+# 20.04
+if [ $CODE_NAME == "focal" ]; then
+echo -e "
+# LLVM13
+deb http://apt.llvm.org/focal/ llvm-toolchain-focal-13 main
+deb-src http://apt.llvm.org/focal/ llvm-toolchain-focal-13 main" >> /etc/apt/sources.list
+fi
+wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add -
+apt update
 
 # Remove all existing alternatives
 update-alternatives --remove-all llvm
@@ -7,15 +19,15 @@ update-alternatives --remove-all clang
 # exit on first error
 set -e
 
-VERSION=10
+VERSION=13
 
 # install
-apt install -y libllvm-$VERSION-ocaml-dev libllvm8 llvm-$VERSION llvm-$VERSION-dev llvm-$VERSION-doc llvm-$VERSION-examples llvm-$VERSION-runtime
-apt install -y clang-$VERSION clang-tools-$VERSION clang-$VERSION-doc libclang-common-$VERSION-dev libclang-$VERSION-dev libclang1-$VERSION clang-format-$VERSION python3-clang-$VERSION
-apt install -y libfuzzer-$VERSION-dev
-apt install -y lldb-$VERSION
-apt install -y lld-$VERSION
-apt install -y libc++-$VERSION-dev libc++abi-$VERSION-dev
+apt install -y libllvm-$VERSION-ocaml-dev libllvm$VERSION llvm-$VERSION llvm-$VERSION-dev llvm-$VERSION-doc llvm-$VERSION-examples llvm-$VERSION-runtime && \
+apt install -y clang-$VERSION clang-tools-$VERSION clang-$VERSION-doc libclang-common-$VERSION-dev libclang-$VERSION-dev libclang1-$VERSION clang-format-$VERSION python3-clang-$VERSION clangd-$VERSION && \
+apt install -y libfuzzer-$VERSION-dev && \
+apt install -y lldb-$VERSION && \
+apt install -y lld-$VERSION && \
+apt install -y libc++-$VERSION-dev libc++abi-$VERSION-dev && \
 
 # llvm
 update-alternatives \
@@ -69,6 +81,8 @@ update-alternatives \
   --slave /usr/bin/llvm-tblgen llvm-tblgen /usr/bin/llvm-tblgen-$VERSION \
   --slave /usr/bin/llvm-undname llvm-undname /usr/bin/llvm-undname-$VERSION \
   --slave /usr/bin/llvm-xray llvm-xray /usr/bin/llvm-xray-$VERSION
+
+# TODO: llvm headers (/usr/include/llvm and /usr/include/llvm-c)
 
 # clang
 update-alternatives \
