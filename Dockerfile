@@ -8,6 +8,11 @@ RUN apt-get update && \
     add-apt-repository -y ppa:avsm/ppa && \
     apt-get install -y make git gcc ocaml pkg-config m4 cmake sudo python2.7 libgmp-dev python3-distutils curl wget opam
 
+# Install latest git because I want to use latest git
+RUN add-apt-repository -y ppa:git-core/ppa && \
+    apt-get update && \
+    apt-get install -y git
+
 # RUN curl -s https://packagecloud.io/install/repositories/souffle-lang/souffle/script.deb.sh | bash
 # RUN apt-get install -y souffle
 # 위의 명령어 대체 with https://souffle-lang.github.io/install.html
